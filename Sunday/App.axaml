@@ -1,0 +1,105 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Sunday"
+             xmlns:c="http://schemas.superdev.ch/valueconverters/2016/xaml"
+             x:Class="Sunday.App"
+             RequestedThemeVariant="Default">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+
+        <Style Selector="Button:pressed">
+            <Setter Property="RenderTransform" Value="scale(1)"></Setter>
+        </Style>
+        <Style Selector="ToggleButton:pressed">
+            <Setter Property="RenderTransform" Value="scale(1)"></Setter>
+        </Style>
+        <Style Selector="CheckBox:pressed">
+            <Setter Property="RenderTransform" Value="scale(1)"></Setter>
+        </Style>
+        <Style Selector="RadioButton:pressed">
+            <Setter Property="RenderTransform" Value="scale(1)"></Setter>
+        </Style>
+        <Style Selector="RepeatButton:pressed">
+            <Setter Property="RenderTransform" Value="scale(1)"></Setter>
+        </Style>
+    </Application.Styles>
+
+    <Application.Resources>
+        <c:StringCaseConverter x:Key="StringCaseConverter" />
+
+        <DataTemplate x:Key="ClearSkyWall">
+            <Grid>
+                <Grid.Styles>
+                    <Style Selector="Rectangle.Animate1">
+                        <Style.Animations>
+                            <Animation Duration="0:0:5"
+                                       IterationCount="INFINITE"
+                                       PlaybackDirection="Alternate"
+                                       Easing="CubicEaseOut">
+                                <KeyFrame Cue="0%">
+                                    <Setter Property="Fill">
+                                        <LinearGradientBrush StartPoint="0% 0%"
+                                                             EndPoint="100% 100%">
+                                            <GradientStop Offset="0.0" Color="DodgerBlue" />
+                                            <GradientStop Offset="1.4" Color="#80FFFFFF" />
+                                        </LinearGradientBrush>
+                                    </Setter>
+                                </KeyFrame>
+                                <KeyFrame Cue="100%">
+                                    <Setter Property="Fill">
+                                        <LinearGradientBrush StartPoint="0% 0%"
+                                                             EndPoint="100% 100%">
+                                            <GradientStop Offset="0.0" Color="#80FFFFFF" />
+                                            <GradientStop Offset="1.0" Color="SkyBlue" />
+                                        </LinearGradientBrush>
+                                    </Setter>
+                                </KeyFrame>
+                            </Animation>
+                        </Style.Animations>
+                    </Style>
+                    <Style Selector="Rectangle.Animate2">
+                        <Style.Animations>
+                            <Animation Duration="0:0:5"
+                                       IterationCount="INFINITE"
+                                       PlaybackDirection="Alternate"
+                                       Easing="CubicEaseOut">
+                                <KeyFrame Cue="0%">
+                                    <Setter Property="Fill">
+                                        <LinearGradientBrush StartPoint="0% 0%"
+                                                             EndPoint="0% 100%">
+                                            <GradientStop Offset="0.0" Color="DodgerBlue" />
+                                            <GradientStop Offset="1.4" Color="#80FFFFFF" />
+                                        </LinearGradientBrush>
+                                    </Setter>
+                                </KeyFrame>
+                                <KeyFrame Cue="100%">
+                                    <Setter Property="Fill">
+                                        <LinearGradientBrush StartPoint="0% 0%"
+                                                             EndPoint="0% 100%"
+                                                             Opacity="0.4">
+                                            <GradientStop Offset="0.0" Color="DodgerBlue" />
+                                            <GradientStop Offset="1.0" Color="SkyBlue" />
+                                        </LinearGradientBrush>
+                                    </Setter>
+                                </KeyFrame>
+                            </Animation>
+                        </Style.Animations>
+                    </Style>
+                </Grid.Styles>
+                <Rectangle Fill="DodgerBlue">
+
+                </Rectangle>
+                <Rectangle Classes="Animate1">
+                </Rectangle>
+                <Rectangle Classes="Animate2">
+                </Rectangle>
+            </Grid>
+        </DataTemplate>
+    </Application.Resources>
+</Application>

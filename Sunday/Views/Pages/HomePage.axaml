@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Sunday.ViewModels"
+             xmlns:valueConverters="clr-namespace:Sunday.ValueConverters"
+             xmlns:services="clr-namespace:Sunday.Services"
+             xmlns:controls="clr-namespace:Sunday.Controls"
+             x:Class="Sunday.Views.HomePage"
+             x:DataType="viewModels:HomePageViewModel"
+             Background="#000"
+             Foreground="#FFF"
+             mc:Ignorable="d"
+             d:DesignWidth="900"
+             d:DesignHeight="600">
+    <UserControl.Styles>
+        <Style Selector="Grid.Content">
+            <Style.Animations>
+                <Animation Duration="0:0:0.5"
+                           Easing="CubicEaseOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="TranslateTransform.X" Value="200"/>
+                        <Setter Property="Opacity" Value="0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="50%">
+                        <Setter Property="Opacity" Value="1"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="TranslateTransform.X" Value="0"/>
+                        <Setter Property="Opacity" Value="1"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+    <controls:Pivot ItemsSource="{Binding Forecast}"
+                    x:Name="Pivot">
+        <controls:Pivot.Background>
+            <ImageBrush Stretch="UniformToFill"
+                        Source="{Binding #Pivot.((services:ForecastModel)SelectedItem).WeatherImage, Converter={valueConverters:DecodedImageSourceConverter}, ConverterParameter=340}"/>
+        </controls:Pivot.Background>
+        <controls:Pivot.HeaderTemplate>
+            <DataTemplate DataType="services:ForecastModel">
+                <TextBlock FontSize="14"
+                           FontWeight="Bold"
+                    Text="{Binding Date, Converter={valueConverters:DateToDayOfWeekConverter}, ConverterParameter=u}" />
+            </DataTemplate>
+        </controls:Pivot.HeaderTemplate>
+        <controls:Pivot.ItemTemplate>
+            <DataTemplate>
+                <Grid Classes="Content">
+                    <StackPanel VerticalAlignment="Center"
+                                HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding Temperature, StringFormat='{}{0}°C'}"
+                                   FontSize="100"
+                                   Foreground="White" />
+                        <TextBlock Text="{Binding Text}"
+                                   FontSize="28"
+                                   Foreground="#DDD" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </controls:Pivot.ItemTemplate>
+    </controls:Pivot>
+</UserControl>

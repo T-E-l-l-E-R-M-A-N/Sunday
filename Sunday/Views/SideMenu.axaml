@@ -1,0 +1,109 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:Sunday.ViewModels"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:valueConverters="clr-namespace:Sunday.ValueConverters"
+             x:Class="Sunday.Views.SideMenu"
+             x:DataType="viewModels:SideMenuViewModel"
+             Width="280"
+             HorizontalAlignment="Left"
+             Background="#CC000000"
+             Foreground="White">
+
+    <!-- ===== Стили ===== -->
+    <UserControl.Styles>
+
+        <!-- Активный пункт -->
+        <Style Selector="Button.pressed /template/ Border">
+            <Setter Property="Background" Value="#0F6CBD"/>
+        </Style>
+
+        <!-- Hover -->
+        <Style Selector="Button:pointerover /template/ Border">
+            <Setter Property="Background" Value="#0F6CBD"/>
+        </Style>
+
+        <!-- Плавное появление пунктов -->
+        <Style Selector="StackPanel.items">
+            <Style.Animations>
+                <Animation Duration="0:0:0.5" Easing="CubicEaseOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0"/>
+                        <Setter Property="TranslateTransform.Y" Value="30"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1"/>
+                        <Setter Property="TranslateTransform.Y" Value="0"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+
+
+    <!-- ===== Контент ===== -->
+    <Grid>
+        <!-- Акрил / полупрозрачный градиентный фон -->
+        <Border>
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0" Color="#E6000000"/>
+                    <GradientStop Offset="1" Color="#F0141414"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <!-- Логотип / заголовок -->
+        <StackPanel VerticalAlignment="Top" Margin="16,32,0,0">
+            <TextBlock Text="WEATHER"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="#FFF"
+                       LetterSpacing="2"/>
+            <Border Height="1" Background="#0078D7" Margin="0,8,0,0"/>
+        </StackPanel>
+
+        <!-- Меню -->
+        <StackPanel VerticalAlignment="Bottom" Margin="0,0,0,24" x:Name="MenuContainer">
+            <ItemsControl ItemsSource="{Binding Pages}" Margin="0,0,0,20">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding $parent[ItemsControl].((viewModels:SideMenuViewModel)DataContext).OpenPageCommand}"
+                                CommandParameter="{Binding .}"
+                                Height="50"
+                                Width="{Binding $parent[ItemsControl].Bounds.Width}"
+                                Background="Transparent"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="0">
+                                        <DockPanel VerticalAlignment="Center" Margin="8,0">
+                                            <avalonia:Icon Value="{Binding Type, Converter={valueConverters:SideMenuIconsConverter}}"
+                                                           FontSize="20"
+                                                           Margin="12,0,0,0"
+                                                           Foreground="#FFF"/>
+                                            <TextBlock Text="{Binding Title, Converter={StaticResource StringCaseConverter}, ConverterParameter=u}"
+                                                       Margin="16,0,0,0"
+                                                       FontSize="16"
+                                                       FontWeight="Medium"
+                                                       Foreground="#FFF"
+                                                       VerticalAlignment="Center"/>
+                                        </DockPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Версия / подпись -->
+            <TextBlock Text="v1.0"
+                       FontSize="12"
+                       Foreground="#666"
+                       HorizontalAlignment="Right"
+                       Margin="0,12,12,0"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

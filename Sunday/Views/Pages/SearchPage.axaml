@@ -1,0 +1,163 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Sunday.ViewModels"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:views="clr-namespace:Sunday.Views"
+             xmlns:valueConverters="clr-namespace:Sunday.ValueConverters"
+             mc:Ignorable="d"
+             x:Class="Sunday.Views.SearchPage"
+             x:DataType="viewModels:SearchPageViewModel"
+             Background="LightGray">
+
+    <Grid>
+        <!-- ======= Верхняя панель ======= -->
+        <Border Height="48"
+                VerticalAlignment="Top">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0% 0%"
+                                     EndPoint="0% 100%">
+                    <GradientStop Offset="0.0" Color="White"/>
+                    <GradientStop Offset="0.6" Color="LightGray"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <DockPanel VerticalAlignment="Center" Margin="8,0"
+                       LastChildFill="True">
+                <Button Width="44" Height="44"
+                        Background="#0078D7"
+                        CornerRadius="8"
+                        Command="{Binding $parent[views:MainView].((viewModels:MainViewModel)DataContext).SideMenu.TogglePresentedCommand}">
+                    <avalonia:Icon Value="mdi menu"
+                                   Foreground="White"
+                                   FontSize="22" />
+                </Button>
+
+                <TextBlock Text="Search"
+                           VerticalAlignment="Center"
+                           Margin="16,0,0,0"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="#333" />
+
+                <StackPanel Orientation="Horizontal"
+                            DockPanel.Dock="Right"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Spacing="4"
+                            Margin="8,0,8,0">
+                    <TextBox Width="200"
+                             Height="36"
+                             CornerRadius="8"
+                             Watermark="Enter city..."
+                             VerticalContentAlignment="Center"
+                             BorderBrush="LightGray"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             VerticalAlignment="Center"
+                             Padding="8,0"
+                             FontSize="14"/>
+                    <Button Width="40" Height="36"
+                            Background="#0078D7"
+                            CornerRadius="8"
+                            Command="{Binding SearchCommand}">
+                        <avalonia:Icon Value="mdi magnify"
+                                       Foreground="White"
+                                       FontSize="20"/>
+                    </Button>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- ======= Список результатов ======= -->
+        <ScrollViewer Margin="0,56,0,70"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding SearchResults}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Margin="8"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="260" Height="140"
+                                
+                                CornerRadius="12"
+                                Background="#FFF"
+                                BoxShadow="0 2 10 #20000000"
+                                Margin="8"
+                                Cursor="Hand">
+                            <Grid>
+                                <Image Source="{Binding Forecast[0].WeatherImage, Converter={valueConverters:DecodedImageSourceConverter}, ConverterParameter=200}"
+                                       Stretch="UniformToFill"
+                                       Opacity="0.6"
+                                       Margin="10"
+                                       ClipToBounds="True">
+                                </Image>
+
+                                <StackPanel VerticalAlignment="Bottom" Margin="16" Spacing="2">
+                                    <TextBlock Text="{Binding Name, Converter={valueConverters:CityTransliterationConverter}}"
+                                               FontSize="18"
+                                               FontWeight="SemiBold"
+                                               Foreground="#000"/>
+                                    <TextBlock Text="{Binding Forecast[0].Date, StringFormat='{}{0:dd MMM}'}"
+                                               FontSize="13"
+                                               Foreground="#000"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="{Binding Forecast[0].Temperature}"
+                                                   FontSize="28"
+                                                   FontWeight="Thin"
+                                                   Foreground="#000"/>
+                                        <TextBlock Text="°C"
+                                                   FontSize="16"
+                                                   Foreground="#000"
+                                                   VerticalAlignment="Bottom"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Иконка добавления -->
+                                <Button Width="32" Height="32"
+                                        Background="#66000000"
+                                        CornerRadius="6"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Margin="8"
+                                        Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).PinCommand}"
+                                        CommandParameter="{Binding}">
+                                    <avalonia:Icon Value="mdi plus"
+                                                   Foreground="White"
+                                                   FontSize="18"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Hover эффект -->
+                            <Border.Styles>
+                                <Style Selector="Border:pointerover">
+                                    <Setter Property="BoxShadow" Value="0 4 14 #30000000"/>
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                </Style>
+                            </Border.Styles>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- ======= Нижняя панель ======= -->
+        <Border Height="70"
+                VerticalAlignment="Bottom">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0% 0%"
+                                     EndPoint="0% 100%">
+                    <GradientStop Offset="0.0" Color="LightGray"/>
+                    <GradientStop Offset="0.6" Color="White"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+    </Grid>
+</UserControl>

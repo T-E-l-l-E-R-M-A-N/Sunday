@@ -1,0 +1,131 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Sunday.ViewModels"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:valueConverters="clr-namespace:Sunday.ValueConverters"
+             xmlns:views="clr-namespace:Sunday.Views"
+             mc:Ignorable="d" d:DesignWidth="385" d:DesignHeight="718"
+
+             x:Class="Sunday.Views.MainView"
+             FontWeight="Thin"
+             Foreground="#FFF"
+             x:DataType="vm:MainViewModel">
+    <UserControl.Styles>
+        <Style Selector="ContentControl#SideMenu:not(.isOpen)">
+            <Style.Animations>
+                <Animation Duration="0:0:0.5"
+                           Easing="CubicEaseOut"
+                           FillMode="Both">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="TranslateTransform.X" Value="0"/>
+                        <Setter Property="Opacity" Value="1"></Setter>
+                    </KeyFrame>
+                    <KeyFrame Cue="90%">
+                        <Setter Property="Opacity" Value="1"></Setter>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="TranslateTransform.X" Value="-270"/>
+                        <Setter Property="Opacity" Value="0"></Setter>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        
+        <Style Selector="ContentControl#SideMenu.isOpen">
+            <Style.Animations>
+                <Animation Duration="0:0:0.5"
+                           Easing="CubicEaseOut"
+                           FillMode="Both">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="TranslateTransform.X" Value="-270"/>
+                        <Setter Property="Opacity" Value="0"></Setter>
+                    </KeyFrame>
+                    <KeyFrame Cue="90%">
+                        <Setter Property="Opacity" Value="0"></Setter>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="TranslateTransform.X" Value="0"/>
+                        <Setter Property="Opacity" Value="1"></Setter>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        
+        <Style Selector="Button.CommandBarBtn">
+            <Setter Property="Theme">
+                <ControlTheme TargetType="Button">
+                    <Setter Property="Template">
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}">
+                                <ContentControl Content="{TemplateBinding Content}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter>
+                    
+                    <Style Selector="^:pointerover">
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Style>
+                    <Style Selector="^:pressed">
+                        <Setter Property="Background" Value="#20FFFFFF"/>
+                    </Style>
+                    <Style Selector="^:disabled">
+                        <Setter Property="Background" Value="Gray"/>
+                    </Style>
+                </ControlTheme>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        
+        <Border VerticalAlignment="Bottom"
+                Height="70"
+                >
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0% 0%"
+                                     EndPoint="0% 100%">
+                    <GradientStop Offset="0.0" Color="LightGray"/>
+                    <GradientStop Offset="0.6" Color="White"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <DockPanel LastChildFill="True"
+                       Height="48"
+                       VerticalAlignment="Top">
+                <Button Width="48"
+                        Background="Transparent"
+                        Classes="CommandBarBtn"
+                        Command="{Binding SideMenu.TogglePresentedCommand}"
+                        Height="48">
+                    <avalonia:Icon Foreground="#000"
+                                   Value="mdi menu"
+                                   FontSize="24" />
+                </Button>
+                <Button Width="48"
+                        Background="Transparent"
+                        DockPanel.Dock="Right"
+                        Classes="CommandBarBtn"
+                        Height="48">
+                    <avalonia:Icon Foreground="#000"
+                                   Value="mdi plus"
+                                   FontSize="24" />
+                </Button>
+                <Grid></Grid>
+            </DockPanel>
+        </Border>
+        <ContentControl Content="{Binding CurrentPage}"
+                        x:Name="ContentView"></ContentControl>
+        <ContentControl x:Name="SideMenu"
+                        Margin="0,48,0,70"
+                        Content="{Binding SideMenu}"
+                        Name="SideMenu"
+                        Classes.isOpen="{Binding SideMenu.IsPresented}" />
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Sunday.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Sunday.Controls.Pivot">
+    <UserControl.Template>
+        <ControlTemplate TargetType="controls:Pivot">
+            <Grid>
+                <Rectangle Fill="{TemplateBinding Background}"/>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled">
+                    <Border Height="50"
+                            VerticalAlignment="Top">
+                        <ListBox ItemsSource="{Binding $parent[controls:Pivot].ItemsSource}"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 VerticalAlignment="Center"
+                                 Margin="20,0"
+                                 FontSize="40"
+                                 Padding="0"
+                                 AutoScrollToSelectedItem="True"
+                                 SelectedIndex="{Binding $parent[controls:Pivot].SelectedIndex, Mode=TwoWay}"
+                                 ItemTemplate="{TemplateBinding HeaderTemplate}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Foreground" Value="#40FFFFFF"></Setter>
+                                    <Setter Property="Template">
+                                        <ControlTemplate>
+                                            <ContentControl Content="{TemplateBinding Content}"
+                                                            ContentTemplate="{TemplateBinding ContentTemplate}"></ContentControl>
+                                        </ControlTemplate>
+                                    </Setter>
+                                </Style>
+                                <Style Selector="ListBoxItem:selected">
+                                    <Setter Property="Foreground" Value="#FFFFFF"></Setter>
+                                </Style>
+                            </ListBox.Styles>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="20"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                    </Border>
+                   
+                </ScrollViewer>
+                <ContentControl Content="{Binding $parent[controls:Pivot].SelectedItem, Mode=TwoWay}"
+                                Margin="0,50,0,0"
+                                Background="Transparent"
+                                x:Name="PART_ContentView"
+                                ContentTemplate="{Binding $parent[controls:Pivot].ItemTemplate}">
+                        
+                </ContentControl>
+            </Grid>
+        </ControlTemplate>
+    </UserControl.Template>
+</UserControl>

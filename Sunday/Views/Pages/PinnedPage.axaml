@@ -1,0 +1,202 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Sunday.ViewModels"
+             xmlns:valueConverters="clr-namespace:Sunday.ValueConverters"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:views="clr-namespace:Sunday.Views"
+             mc:Ignorable="d"
+             x:Class="Sunday.Views.PinnedPage"
+             x:DataType="viewModels:PinnedPageViewModel"
+             Background="LightGray">
+
+    <Grid>
+        <!-- Верхняя панель -->
+        <Border Height="48"
+                VerticalAlignment="Top">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0% 0%"
+                                     EndPoint="0% 100%">
+                    <GradientStop Offset="0.0" Color="White"/>
+                    <GradientStop Offset="0.6" Color="LightGray"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <DockPanel VerticalAlignment="Center" Margin="8,0"
+                       LastChildFill="True">
+                <Button Width="44" Height="44"
+                        Background="#0078D7"
+                        CornerRadius="8"
+                        Command="{Binding $parent[views:MainView].((viewModels:MainViewModel)DataContext).SideMenu.TogglePresentedCommand}">
+                    <avalonia:Icon Value="mdi menu"
+                                   Foreground="White"
+                                   FontSize="22" />
+                </Button>
+                <Button Width="44" Height="44"
+                        CornerRadius="8"
+                        Background="Transparent"
+                        DockPanel.Dock="Right"
+                        Command="{Binding AddCommand}">
+                    <avalonia:Icon Value="mdi magnify"
+                                   Foreground="#60000000"
+                                   FontSize="22" />
+                </Button>
+                <TextBlock Text="Places"
+                           VerticalAlignment="Center"
+                           Margin="16,0,0,0"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="#333" />
+
+                
+            </DockPanel>
+        </Border>
+
+        <!-- Контент -->
+        <ScrollViewer Margin="0,56,0,56">
+            <WrapPanel Margin="16">
+                <ItemsControl ItemsSource="{Binding Cities}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="320"
+                                    Margin="16"
+                                    Background="#FFF"
+                                    CornerRadius="16"
+                                    BoxShadow="0 2 10 #22000000"
+                                    Cursor="Hand">
+                                <Grid RowDefinitions="180,Auto" ClipToBounds="True">
+                                    <!-- Фото города -->
+                                    <Border CornerRadius="10"
+                                            Margin="10">
+                                        <Border.Background>
+                                            <ImageBrush  Stretch="UniformToFill"
+                                                         Source="{Binding Forecast[0].WeatherImage, Converter={valueConverters:DecodedImageSourceConverter}, ConverterParameter=340}"></ImageBrush>
+                                        </Border.Background>
+                                    </Border>
+
+                                    <!-- Текст поверх фото -->
+                                    <StackPanel VerticalAlignment="Bottom"
+                                                Margin="16,0,16,16"
+                                                Spacing="4">
+                                        <TextBlock Text="{Binding Name, Converter={valueConverters:CityTransliterationConverter}}"
+                                                   FontSize="20"
+                                                   FontWeight="Bold"
+                                                   Foreground="White"/>
+                                        <TextBlock Text="{Binding Forecast[0].Text, Converter={StaticResource StringCaseConverter}, ConverterParameter=l}"
+                                                   FontSize="14"
+                                                   Foreground="#FFF"
+                                                   Opacity="0.9"/>
+                                        <TextBlock Text="{Binding Forecast[0].Temperature, StringFormat='{}{0}°C'}"
+                                                   FontSize="28"
+                                                   FontWeight="Thin"
+                                                   Foreground="White"/>
+                                    </StackPanel>
+
+                                    <!-- Детали -->
+                                    <StackPanel Grid.Row="1"  Spacing="8"
+                                                Margin="10">
+                                        <TextBlock Text="Подробности"
+                                                   FontSize="16"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#333"/>
+                                        <ItemsControl ItemsSource="{Binding Forecast}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid ColumnDefinitions="1*,Auto,1*" Margin="0,2">
+                                                        <TextBlock Text="{Binding Date, Converter={valueConverters:DateToShortFormatConverter}}"
+                                                                   FontSize="13"
+                                                                   Foreground="#555"/>
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    Grid.Column="2"
+                                                                    Spacing="4"
+                                                                    HorizontalAlignment="Right">
+                                                            <TextBlock Text="{Binding MaxTemperature}"
+                                                                       FontSize="13"
+                                                                       Foreground="#111"/>
+                                                            <TextBlock Text="° / "
+                                                                       FontSize="13"
+                                                                       Foreground="#666"/>
+                                                            <TextBlock Text="{Binding MinTemperature}"
+                                                                       FontSize="13"
+                                                                       Foreground="#111"/>
+                                                            <TextBlock Text="°C"
+                                                                       FontSize="13"
+                                                                       Foreground="#666"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+
+                                    <!-- Кнопка открепления -->
+                                    <Button Width="36"
+                                            Height="36"
+                                            Background="#66000000"
+                                            CornerRadius="8"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Margin="12"
+                                            Command="{Binding $parent[ItemsControl].((viewModels:PinnedPageViewModel)DataContext).UnpinCommand}"
+                                            CommandParameter="{Binding Id}">
+                                        <avalonia:Icon Value="mdi pin-off"
+                                                       Foreground="White"
+                                                       FontSize="18"/>
+                                    </Button>
+                                </Grid>
+
+                                <!-- Hover эффект -->
+                                <Border.Styles>
+                                    <Style Selector="Border:pointerover">
+                                        <Setter Property="BoxShadow" Value="0 4 14 #40000000"/>
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                    </Style>
+                                </Border.Styles>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </WrapPanel>
+        </ScrollViewer>
+
+        <!-- Пустое состояние -->
+        <Border Background="#FFF"
+                Margin="0,56,0,56"
+                IsVisible="{Binding !Cities.Count}">
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="20">
+                <avalonia:Icon Foreground="#666"
+                               Value="mdi star-outline"
+                               FontSize="64"/>
+                <TextBlock Text="Нет избранных городов..."
+                           FontSize="20"
+                           Foreground="#555"
+                           TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Нижняя панель -->
+        <Border Height="70"
+                VerticalAlignment="Bottom">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0% 0%"
+                                     EndPoint="0% 100%">
+                    <GradientStop Offset="0.0" Color="LightGray"/>
+                    <GradientStop Offset="0.6" Color="White"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+    </Grid>
+</UserControl>
