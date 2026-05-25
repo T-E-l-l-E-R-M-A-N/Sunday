@@ -38,7 +38,7 @@ public record GeoCity(
 
 public class WeatherService
 {
-    private readonly string _apiKey = "1ff7268e73ce387a3b19d0156dca18b3";
+    private readonly string _apiKey = "";
     private string _cachedImagesFolder;
     private Current _current;
     private readonly HttpClient _httpClient = new();
